@@ -37,8 +37,7 @@ export LD_LIBRARY_PATH="/home/ryuzenn/toolchain/rastamod-clang/lib:$LD_LIBRARY_P
 export KBUILD_COMPILER_STRING="$(/home/ryuzenn/toolchain/rastamod-clang/bin/clang --version | head -n 1 | perl -pe 's/\((?:http|git).*?\)//gs' | sed -e 's/  */ /g' -e 's/[[:space:]]*$//' -e 's/^.*clang/clang/')"
 export out=/home/ryuzenn/out-meme
 
-# Functions
-clang_build () {
+
     make -j4 O=$out \
                           ARCH=arm64 \
                           CC="clang" \
@@ -83,3 +82,4 @@ make -C "$ZIP_DIR" clean
 wifi_modules
 cp "$KERN_IMG" "$DTBO_IMG" "$ZIP_DIR"/
 make -C "$ZIP_DIR" normal
+#
