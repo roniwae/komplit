@@ -13,10 +13,10 @@
 
 #define SDE_HW_KCAL_ENABLED		(1)
 
-#define SDE_HW_KCAL_MIN_VALUE		(20)
-#define SDE_HW_KCAL_INIT_RED		(256)
-#define SDE_HW_KCAL_INIT_GREEN		(256)
-#define SDE_HW_KCAL_INIT_BLUE		(256)
+#define SDE_HW_KCAL_MIN_VALUE		(35)
+#define SDE_HW_KCAL_INIT_RED		(225)
+#define SDE_HW_KCAL_INIT_GREEN		(225)
+#define SDE_HW_KCAL_INIT_BLUE		(237)
 
 #define SDE_HW_KCAL_INIT_HUE		(0)
 #define SDE_HW_KCAL_INIT_ADJ		(255)
@@ -63,6 +63,12 @@ struct drm_msm_pa_hsic sde_hw_kcal_hsic_struct(void);
  * @plane: index of pcc color plane.
  */
 void sde_hw_kcal_pcc_adjust(u32 *data, int plane);
+
+/**
+ * kcal_force_update() - force reprocessing on config change.
+ */
+void kcal_force_update(void);
+
 #else
 static inline struct sde_hw_kcal sde_hw_kcal_get(void)
 {
