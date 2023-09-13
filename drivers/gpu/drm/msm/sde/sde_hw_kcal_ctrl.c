@@ -116,14 +116,16 @@ static ssize_t store_kcal(struct device *dev,
 
 	ret = sscanf(buf, "%u %u %u", &kcal_r, &kcal_g, &kcal_b);
 	if (ret != 3 ||
-	    kcal_r < 1 || kcal_r > 256 ||
-	    kcal_g < 1 || kcal_g > 256 ||
-	    kcal_b < 1 || kcal_b > 256)
+	    kcal_r < 1 || kcal_r > 225 ||
+	    kcal_g < 1 || kcal_g > 225 ||
+	    kcal_b < 1 || kcal_b > 237)
 		return -EINVAL;
 
 	pcc->red   = max(kcal_r, kcal_lut_data.min_value);
 	pcc->green = max(kcal_g, kcal_lut_data.min_value);
 	pcc->blue  = max(kcal_b, kcal_lut_data.min_value);
+
+	kcal_force_update();
 
 	return count;
 }
