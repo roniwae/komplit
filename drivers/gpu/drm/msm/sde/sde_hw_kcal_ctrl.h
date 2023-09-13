@@ -19,6 +19,9 @@
 #define SDE_HW_KCAL_INIT_BLUE		(237)
 
 #define SDE_HW_KCAL_INIT_HUE		(0)
+#define SDE_HW_KCAL_INIT_SAT		(277)
+#define SDE_HW_KCAL_INIT_VAL		(250)
+#define SDE_HW_KCAL_INIT_CONT		(264)
 #define SDE_HW_KCAL_INIT_ADJ		(255)
 
 struct sde_hw_kcal_pcc {
