@@ -333,49 +333,19 @@ static void show_vma_header_prefix(struct seq_file *m,
 				   vm_flags_t flags, unsigned long long pgoff,
 				   dev_t dev, unsigned long ino)
 {
-	size_t len;
-	char *out;
-
-	/* Set the overflow status to get more memory if there's no space */
-	if (seq_get_buf(m, &out) < 69) {
-		seq_commit(m, -1);
-		return -ENOMEM;
-	}
-
-	/* Supports printing up to 40 bits per virtual address */
-	BUILD_BUG_ON(CONFIG_ARM64_VA_BITS > 40);
-
-	len = print_vma_hex10(out, start, __builtin_clzl);
-
-	out[len++] = '-';
-
-	len += print_vma_hex10(out + len, end, __builtin_clzl);
-
-	out[len++] = ' ';
-	out[len++] = "-r"[!!(flags & VM_READ)];
-	out[len++] = "-w"[!!(flags & VM_WRITE)];
-	out[len++] = "-x"[!!(flags & VM_EXEC)];
-	out[len++] = "ps"[!!(flags & VM_MAYSHARE)];
-	out[len++] = ' ';
-
-	len += print_vma_hex10(out + len, pgoff, __builtin_clzll);
-
-	out[len++] = ' ';
-
-	len += print_vma_hex3(out + len, MAJOR(dev), __builtin_clz);
-
-	out[len++] = ':';
-
-	len += print_vma_hex5(out + len, MINOR(dev), __builtin_clz);
-
-	out[len++] = ' ';
-
-	len += num_to_str(&out[len], 20, ino);
-
-	out[len++] = ' ';
-
-	m->count += len;
-	return 0;
+	seq_setwidth(m, 25 + sizeof(void *) * 6 - 1);
+	seq_put_hex_ll(m, NULL, start, 8);
+	seq_put_hex_ll(m, "-", end, 8);
+	seq_putc(m, ' ');
+	seq_putc(m, flags & VM_READ ? 'r' : '-');
+	seq_putc(m, flags & VM_WRITE ? 'w' : '-');
+	seq_putc(m, flags & VM_EXEC ? 'x' : '-');
+	seq_putc(m, flags & VM_MAYSHARE ? 's' : 'p');
+	seq_put_hex_ll(m, " ", pgoff, 8);
+	seq_put_hex_ll(m, " ", MAJOR(dev), 2);
+	seq_put_hex_ll(m, ":", MINOR(dev), 2);
+	seq_put_decimal_ull(m, " ", ino);
+	seq_putc(m, ' ');
 }
 
 static void
@@ -923,7 +893,6 @@ static int show_smap(struct seq_file *m, void *v, int is_pid)
 			   (vma->vm_end - vma->vm_start) >> 10,
 			   vma_kernel_pagesize(vma) >> 10,
 			   vma_mmu_pagesize(vma) >> 10);
-
 
 	if (!rollup_mode || last_vma)
 		seq_printf(m,
