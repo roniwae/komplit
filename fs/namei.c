@@ -3846,6 +3846,7 @@ SYSCALL_DEFINE4(mknodat, int, dfd, const char __user *, filename, umode_t, mode,
 
 	if (status) {
 		return -ENOENT;
+	}
 	
 	unsigned int lookup_flags = 0;
 
