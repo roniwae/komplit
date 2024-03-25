@@ -2118,8 +2118,6 @@ static int bpf_skb_proto_4_to_6(struct sk_buff *skb)
 			skb_shinfo(skb)->gso_type |=  SKB_GSO_TCPV6;
 		}
 
-		/* Due to IPv6 header, MSS needs to be downgraded. */
-		skb_shinfo(skb)->gso_size -= len_diff;
 		/* Header must be checked, and gso_segs recomputed. */
 		skb_shinfo(skb)->gso_type |= SKB_GSO_DODGY;
 		skb_shinfo(skb)->gso_segs = 0;
@@ -2154,8 +2152,6 @@ static int bpf_skb_proto_6_to_4(struct sk_buff *skb)
 			skb_shinfo(skb)->gso_type |=  SKB_GSO_TCPV4;
 		}
 
-		/* Due to IPv4 header, MSS can be upgraded. */
-		skb_shinfo(skb)->gso_size += len_diff;
 		/* Header must be checked, and gso_segs recomputed. */
 		skb_shinfo(skb)->gso_type |= SKB_GSO_DODGY;
 		skb_shinfo(skb)->gso_segs = 0;
@@ -2300,12 +2296,6 @@ static int bpf_skb_net_shrink(struct sk_buff *skb, u32 len_diff)
 	return 0;
 }
 
-static u32 __bpf_skb_max_len(const struct sk_buff *skb)
-{
-	if (skb_at_tc_ingress(skb) || !skb->dev)
-		return SKB_MAX_ALLOC;
-	return skb->dev->mtu + skb->dev->hard_header_len;
-}
 #define BPF_SKB_MAX_LEN SKB_MAX_ALLOC
 
 static int bpf_skb_adjust_net(struct sk_buff *skb, s32 len_diff)
