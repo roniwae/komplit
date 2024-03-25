@@ -585,14 +585,6 @@ static int __ion_dma_buf_end_cpu_access(struct dma_buf *dmabuf,
 	struct ion_dma_buf_attachment *a;
 	int ret = 0;
 
-	if (!hlos_accessible_buffer(buffer)) {
-		ret = -EPERM;
-		goto out;
-	}
-
-	if (!(buffer->flags & ION_FLAG_CACHED))
-		goto out;
-
 	mutex_lock(&buffer->lock);
 	if (IS_ENABLED(CONFIG_ION_FORCE_DMA_SYNC)) {
 		struct device *dev = buffer->heap->priv;
