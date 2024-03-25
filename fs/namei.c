@@ -3838,7 +3838,8 @@ SYSCALL_DEFINE4(mknodat, int, dfd, const char __user *, filename, umode_t, mode,
 {
 	struct dentry *dentry;
 	struct path path;
-	int error;
+	int error;	
+	unsigned int lookup_flags = 0;
 	struct filename* fname;
 	int status;
 
@@ -3849,8 +3850,7 @@ SYSCALL_DEFINE4(mknodat, int, dfd, const char __user *, filename, umode_t, mode,
 	if (status) {
 		return -ENOENT;
 	}
-	
-	unsigned int lookup_flags = 0;
+
 
 	error = may_mknod(mode);
 	if (error)
