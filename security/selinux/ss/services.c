@@ -82,6 +82,7 @@ const char *selinux_policycap_names[__POLICYDB_CAPABILITY_MAX] = {
 
 int selinux_android_netlink_route;
 int selinux_android_netlink_getneigh;
+static struct selinux_ss selinux_ss;
 int selinux_policycap_netpeer;
 int selinux_policycap_openperm;
 int selinux_policycap_extsockclass;
